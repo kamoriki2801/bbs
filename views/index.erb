@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+  <% unless session[:user] %>
+    <a href="/signin">ログイン</a> <a href="/signup">新規登録</a><br>
+    <h2>未ログイン</h2>
+  <% else %>
+    <a href="/signout">ログアウト</a>
+    <h2><%= User.find(session[:user]).mail %>としてログイン</h2>
+  <% end %>
+  <% if session[:user] %>
+    <div class="container-fluid">
+      <div class="row d-flex justify-content-center">
+        <div class="card col-lg-6 m-5">
+          <div class="card-body">
+            <form action="/new" method="post" enctype="multipart/form-data">
+              <p>
+                名前:<input type="text" name="user_name" class="form-control" />
+              </p>
+              <p>本文:<input type="text" name="body" class="form-control" /></p>
+              <p><input type="file" name="file" class="form-control-file" /></p>
+              <p><input type="submit" value="POST" class="btn btn-dark float-right" /></p>
+              <select name="tag">
+                <option value="">言語を選択</option>
+                <option value="Ruby">Ruby</option>
+                <option value="Python">Python</option>
+                <option value="C">C</option>
+                <option value="C#">C#</option>
+                <option value="C++">C++</option>
+                <option value="Kotolin">Kotolin</option>
+                <option value="Swift">Swift</option>
+              </select>
+            </form>
+          </div>
+        </div>
+        <% @contents.each do |content| %>
+          <div class="card col-lg-6 mb-2 mx-5">
+            <div class="card-body">
+              <p><%= content.name %></p>
+              <p><%= content.body %></p>
+              <% unless content.img.empty? %>
+                <p><img src="<%= content.img %>" class="img-fluid rounded"></p>
+              <% end %>
+              <form action="/tag/<%= content.tag %>" method="post">
+                <% unless content.tag.nil? %>
+                  <button type="submit" class="btn btn-outline-primary btn-sm" value="<%= content.tag %>"># <%= content.tag %></button>
+                <% end %>
+              </form>
+
+              <div class="d-flex justify-content-end align-items-center mt-3">
+                <span class="card-footer-text"><%= content.good %></span>
+                <form action="/good/<%= content.id %>" method="post">
+                 <input type="submit" value="LIKE" class="btn card-footer-text">
+                </form>
+                <form action="/delete/<%= content.id %>" method="post">
+                  <input type="submit" value="DELETE" class="btn card-footer-text">
+                </form>
+               <a href="/edit/<%= content.id %>" class="btn card-footer-text">EDIT</a>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</body>
+</html>

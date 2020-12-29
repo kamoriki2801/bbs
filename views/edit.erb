@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+</head>
+<body>
+ <form action="/renew/<%= @content.id %>" method="post">
+  <p>名前:<input type="text" name="user_name" value="<%= @content.name %>"></p>
+  <p>本文:<input type="text" name="body" value="<%= @content.body %>"></p>
+  <input type="submit" value="編集完了">
+ </form>
+</body>
+</html>
